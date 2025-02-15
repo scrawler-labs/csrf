@@ -18,7 +18,7 @@ class CSRF
      * @param int    $hashTime2Live Default seconds hash before expiration
      * @param int    $hashSize      Default hash size in chars
      */
-    public function __construct(string $session_name = 'csrf-tokens', string $input_name = 'csrf', int $hashTime2Live = 0, int $hashSize = 64)
+    public function __construct(string $session_name = 'csrf-tokens', string $input_name = 'csrf', int $hashTime2Live = 200, int $hashSize = 64)
     {
         // Session mods
         $this->name = $session_name;
@@ -85,10 +85,9 @@ class CSRF
      */
     public function clearHashes($max_hashes = 0): int
     {
-        $ignore = $max_hashes;
         $deleted = 0;
         // Check in the hash list
-        for ($i = count($this->hashes) - 1; $i >= 0; --$i) {
+        for ($i = count($this->hashes) - 1; $i >= $max_hashes; --$i) {
             array_splice($this->hashes, $i, 1);
             ++$deleted;
         }
