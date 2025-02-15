@@ -1,0 +1,23 @@
+{
+    "name": "scrawler/csrf",
+    "description": "csrf protection for scrawler",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Scrawler\\Csrf\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "ipranjal",
+            "email": "pranjaltech10@gmail.com"
+        }
+    ],
+    "require": {
+        "scrawler/http": "^2.1"
+    }
+}
