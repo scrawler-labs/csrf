@@ -2,7 +2,7 @@
 
 namespace Scrawler\Csrf\Middleware;
 
-class Csrf implements Scrawler\Interfaces\MiddlewareInterface
+class Csrf implements \Scrawler\Interfaces\MiddlewareInterface
 {
     public function run(\Scrawler\Http\Request $request, \Closure $next): \Scrawler\Http\Response
     {
