@@ -3,7 +3,7 @@
 if (!function_exists('csrf')) {
     function csrf(): Scrawler\Csrf\CSRF
     {
-
+    
         return new Scrawler\Csrf\CSRF();
     }
 }

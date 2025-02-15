@@ -191,6 +191,6 @@ class CSRF
      */
     private function _save()
     {
-        $_SESSION[$this->name] = serialize($this->hashes);
+        session()->set($this->name, serialize($this->hashes));
     }
 }
