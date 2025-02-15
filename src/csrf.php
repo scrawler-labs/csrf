@@ -47,7 +47,7 @@ class CSRF
         // Generate new hash
         $hash = new Hash($time2Live, $this->hashSize);
         // Save it
-        array_push($this->hashes, $hash);
+        array_unshift($this->hashes, $hash);
         if (0 === $this->clearHashes($max_hashes)) {
             $this->_save();
         }
