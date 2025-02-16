@@ -146,14 +146,6 @@ class CSRF
         if (session()->has($this->name)) {
             // Load session hashes
             $session_hashes = unserialize(session()->get($this->name));
-            // Ignore expired
-            for ($i = count($session_hashes) - 1; $i >= 0; --$i) {
-                // If an expired found, the rest will be expired
-                if ($session_hashes[$i]->hasExpire()) {
-                    break;
-                }
-                array_unshift($this->hashes, $session_hashes[$i]);
-            }
             if (count($this->hashes) != count($session_hashes)) {
                 $this->_save();
             }
