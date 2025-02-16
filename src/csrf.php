@@ -18,7 +18,7 @@ class CSRF
      * @param int    $hashTime2Live Default seconds hash before expiration
      * @param int    $hashSize      Default hash size in chars
      */
-    public function __construct(string $session_name = 'csrf-tokens', string $input_name = 'csrf', int $hashTime2Live = 200, int $hashSize = 64)
+    public function __construct(string $session_name = 'csrf-tokens', string $input_name = 'csrf', int $hashTime2Live = (int) \Safe\ini_get('session.gc_maxlifetime'), int $hashSize = 64)
     {
         // Session mods
         $this->name = $session_name;
@@ -30,6 +30,10 @@ class CSRF
         $this->hashSize = $hashSize;
         // Load hash list
         $this->_load();
+
+        app()->handler('419', function () {
+            return new \Scrawler\Http\Response('Invalid CSRF token', 419);
+        });
     }
 
     /**
@@ -38,7 +42,7 @@ class CSRF
      * @param int $time2Live  Seconds before expiration
      * @param int $max_hashes Clear old context hashes if more than this number
      */
-    private function generateHash($time2Live = -1, $max_hashes = 5): Hash
+    private function generateHash($time2Live = -1, $max_hashes = 10): Hash
     {
         // If no time2live (or invalid) use default
         if ($time2Live < 0) {

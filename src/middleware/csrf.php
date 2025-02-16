@@ -8,7 +8,7 @@ class Csrf implements \Scrawler\Interfaces\MiddlewareInterface
     {
         if ('POST' === $request->getMethod()) {
             if (!csrf()->validate()) {
-                return new \Scrawler\Http\Response('Invalid CSRF token', 403);
+                return app()->container()->call(app()->getHandler('419'));
             }
         }
 

@@ -18,6 +18,10 @@
         }
     ],
     "require": {
-        "scrawler/http": "^2.1"
+        "scrawler/http": "^2.1",
+        "thecodingmachine/safe": "^2.5"
+    },
+    "require-dev": {
+        "scrawler/app": "^2.3"
     }
 }
