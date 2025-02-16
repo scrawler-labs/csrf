@@ -30,10 +30,6 @@ class CSRF
         $this->hashSize = $hashSize;
         // Load hash list
         $this->_load();
-
-        app()->handler('419', function () {
-            return new \Scrawler\Http\Response('Invalid CSRF token', 419);
-        });
     }
 
     /**
