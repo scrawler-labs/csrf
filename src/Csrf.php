@@ -12,22 +12,17 @@ class CSRF
 
     /**
      * Initialize a CSRF instance.
-     *
-     * @param string $session_name  Session name
-     * @param string $input_name    Form name
-     * @param int    $hashTime2Live Default seconds hash before expiration
-     * @param int    $hashSize      Default hash size in chars
      */
-    public function __construct(string $session_name = 'csrf-tokens', string $input_name = 'csrf', int $hashTime2Live = (int) \Safe\ini_get('session.gc_maxlifetime'), int $hashSize = 64)
+    public function __construct()
     {
         // Session mods
-        $this->name = $session_name;
+        $this->name = '__scrawler-csrf';
         // Form input name
-        $this->inputName = $input_name;
+        $this->inputName = 'csrf';
         // Default time before expire for hashes
-        $this->hashTime2Live = $hashTime2Live;
+        $this->hashTime2Live = (int) \Safe\ini_get('session.gc_maxlifetime');
         // Default hash size
-        $this->hashSize = $hashSize;
+        $this->hashSize = 64;
         // Load hash list
         $this->_load();
     }
