@@ -25,13 +25,11 @@ class CSRF
     /**
      * Generate a CSRF_Hash.
      *
-     * @param int $time2Live  Seconds before expiration
-     * @param int $max_hashes Clear old context hashes if more than this number
      */
-    private function generateHash(): Hash
-    {     
+    private function generateHash(): string
+    {
         // Generate new hash
-        $hash = new Hash($this->hashSize);
+        $hash = bin2hex(openssl_random_pseudo_bytes($this->hashSize / 2));
         // Save it
         array_unshift($this->hashes, $hash);
         if (0 === $this->clearHashes()) {
@@ -45,7 +43,6 @@ class CSRF
     /**
      * Get the hashes of a context.
      *
-     * @param int $max_hashes max hashes to get
      *
      * @return array array of hashes as strings
      */
@@ -93,7 +90,7 @@ class CSRF
         $hash = $this->generateHash();
 
         // Generate html input string
-        return '<input type="hidden" name="'.htmlspecialchars($this->inputName).'" id="'.htmlspecialchars($this->inputName).'" value="'.htmlspecialchars($hash->get()).'"/>';
+        return '<input type="hidden" name="' . htmlspecialchars($this->inputName) . '" id="' . htmlspecialchars($this->inputName) . '" value="' . htmlspecialchars($hash) . '"/>';
     }
 
     /**
@@ -107,7 +104,7 @@ class CSRF
         $hash = $this->generateHash();
 
         // Generate html input string
-        return $hash->get();
+        return $hash;
     }
 
     /**
@@ -118,22 +115,21 @@ class CSRF
     public function validate(): bool
     {
         // If hash was not given, find hash
-            if (request()->has($this->inputName)) {
-                $hash = request()->get($this->inputName);
-            } else {
-                return false;
-            }
+        if (request()->has($this->inputName)) {
+            $hash = request()->get($this->inputName);
+        } else {
+            return false;
+        }
 
         // Check in the hash list
         for ($i = count($this->hashes) - 1; $i >= 0; --$i) {
-            if ($this->hashes[$i]->verify($hash)) {
+            if (hash_equals($hash, $this->hashes[$i])) {
                 array_splice($this->hashes, $i, 1);
-
                 return true;
             }
         }
-
         return false;
+
     }
 
     /**
@@ -145,10 +141,8 @@ class CSRF
         // If there are hashes on the session
         if (session()->has($this->name)) {
             // Load session hashes
-            $session_hashes = unserialize(session()->get($this->name));
-            if (count($this->hashes) != count($session_hashes)) {
-                $this->_save();
-            }
+            $this->hashes = unserialize(session()->get($this->name));
+           
         }
     }
 
