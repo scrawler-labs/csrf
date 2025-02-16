@@ -10,19 +10,11 @@ class Hash
     /**
      * [__construct description].
      *
-     * @param int $time2Live Number of seconds before expiration
      */
-    public function __construct($time2Live = 0, $hashSize = 64)
+    public function __construct($hashSize = 64)
     {
         // Generate hash
         $this->hash = $this->_generateHash($hashSize);
-
-        // Set expiration time
-        if ($time2Live > 0) {
-            $this->expire = time() + $time2Live;
-        } else {
-            $this->expire = 0;
-        }
     }
 
     /**
@@ -37,24 +29,13 @@ class Hash
         return bin2hex(openssl_random_pseudo_bytes($n / 2));
     }
 
-    /**
-     * Check if hash has expired.
-     */
-    public function hasExpire(): bool
-    {
-        if (0 === $this->expire || $this->expire > time()) {
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * Verify hash.
      */
-    public function verify(string $hash, string $context = ''): bool
+    public function verify(string $hash): bool
     {
-        if (!$this->hasExpire() && hash_equals($hash, $this->hash)) {
+        if (hash_equals($hash, $this->hash)) {
             return true;
         }
 
